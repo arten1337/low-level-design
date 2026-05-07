@@ -1,6 +1,6 @@
 # Low-Level Design Practice Repo
 
-Personal learning repo for low-level design (object-oriented design) problems. Java 21, Maven. The user (Akhand) is self-studying LLD by implementing 25 classic problems from a curated roadmap.
+Personal learning repo for low-level design (object-oriented design) problems. Java 8, Maven. The user (Akhand) is self-studying LLD by implementing 25 classic problems from a curated roadmap.
 
 This is a **practice repo for interview prep and design intuition** — not production code. Optimize for learning, not for shipping.
 
@@ -94,7 +94,7 @@ Problems must not depend on each other. Each package owns its own domain.
 
 ## Style notes
 
-- Java 21 — use modern features (records, sealed interfaces, pattern-matching switch, text blocks) when they make the design cleaner, not as decoration.
+- Java 8 only. Stick to features the user is comfortable with: lambdas, streams, `Optional`, functional interfaces, default methods, `java.time`. Do **not** use Java 9+ features (records, sealed interfaces, pattern-matching switch, text blocks, `var`, `List.of` / `Map.of`, switch expressions, enhanced `instanceof`). If a newer feature would genuinely make the design cleaner, flag it as a side note instead of using it.
 - Don't generate scaffolding for problems that haven't been started.
 - Don't add abstractions, error handling, or framework hooks beyond what the current problem teaches.
 - Comments only when the *why* is non-obvious. Well-named identifiers are documentation.
