@@ -1,6 +1,6 @@
 # Low-Level Design Practice Repo
 
-Personal learning repo for low-level design (object-oriented design) problems. Java 21, Maven. The user (Akhand) is self-studying LLD by implementing 25 classic problems from a curated roadmap.
+Personal learning repo for low-level design (object-oriented design) problems. Java 8+, Maven. The user (Akhand) is self-studying LLD by implementing 25 classic problems from a curated roadmap.
 
 This is a **practice repo for interview prep and design intuition** — not production code. Optimize for learning, not for shipping.
 
@@ -20,6 +20,10 @@ Hybrid by design — leaning on Claude's intuition for everything except the pro
 
 **This repo is LLD-only.** If a problem leans toward HLD / system design (sharding, replication, distributed consensus, load-balancing across nodes), either skip it or focus only on the LLD slice (object model, single-process design, in-memory data structures).
 
+### Recommended starting order
+
+Tic-Tac-Toe → Vending Machine → Splitwise → Logger → Elevator. After these, most major patterns (State, Strategy, Chain of Responsibility, basic concurrency) have been touched at least once.
+
 ## Per-problem workflow — interview-style requirements, solo design, then critique
 
 The user has explicitly chosen this methodology for every problem. **Honour it.**
@@ -28,8 +32,12 @@ The user has explicitly chosen this methodology for every problem. **Honour it.*
 2. **Interactive requirements interview with Claude.** Claude plays the interviewer. Source: hybrid — PDF/supplement as the floor, Claude's LLD intuition + target-company tilt to shape scope (see "How to source requirements and variations" above). Be concrete and decisive — pin scope down rather than handing choices back ("yes, single-process; persistence out of scope"). Push back on questions that are too vague to answer ("what would you assume and why?"). Drop a hint if the user is missing a major requirement, the way a real interviewer would. Do **not** sketch classes, suggest patterns, or hint at the design. Session ends when the user says they have what they need.
 3. **User spends 30–45 min alone** on design + code (entities → class design → core methods → trace a scenario). Claude is *not* in this phase.
 4. **User brings the code back** (and class design / diagram if they made one).
-5. **Claude critiques** — missed requirements first, then SOLID issues, then "where would a different pattern have been cleaner?" Be specific enough to refactor against.
-6. **User refactors.** This is where most of the learning happens. Loop steps 5–6 until the design holds.
+5. **Claude critiques.**
+   - **Order:** missed requirements → SOLID issues → "where would a different pattern have been cleaner?" Be specific enough to refactor against.
+   - **Pitch one level up, not at the top level.** Lead with the smallest set of changes that close requirement gaps and fix correctness bugs; defer structural splits, pattern introductions, and elegant final-form designs to *later* critique rounds, once a specific tension in the simpler version justifies them. Don't pile 5 new classes and 3 patterns into a single round.
+   - **Teach the principle, not just list the fix.** Every item carries three things: (a) *what was being violated* — name the principle (SRP, DRY, tell-don't-ask, command-query separation, etc.) or the explicit requirement from `REQUIREMENTS.md`; (b) *why the fix matters* — what it concretely enables (testability, reuse, fewer copy-paste bugs, alternative drivers); (c) *what leaving it would have led to* — make the cost visible. The user is building design intuition, not a checklist; a bare "do X" item is a failed critique.
+   - **Critiques live in conversation only** — do not write them to a `CRITIQUE.md` file in the problem's package.
+6. **User refactors.** This is where most of the learning happens. Loop steps 5–6 until the design holds. Each loop is a chance to layer in the *next* level of refinement, not the final one.
 7. **Claude prompts for `NOTES.md`.** Once the refactor settles, ask the user what they want captured (e.g. what was hard, which pattern surprised them, anything they'd do differently, the critique points worth remembering). Write it to `NOTES.md` in the problem's package. Keep it short — a paragraph or a few bullets.
 8. **User picks one variation** and repeats from step 2 (a fresh requirements interview for the variation). Source for variations is hybrid: Claude proposes one tailored to tensions in the user's design, the PDF/supplement list is a fallback menu, and the user can always pitch their own. After each variation is done, prompt for a `NOTES.md` *append* with what the variation taught.
 
@@ -69,21 +77,8 @@ Problems must not depend on each other. Each package owns its own domain.
 
 ## Style notes
 
-- Java 21 — use modern features (records, sealed interfaces, pattern-matching switch, text blocks) when they make the design cleaner, not as decoration.
+- Java 8+ baseline. Use modern features (records, sealed interfaces, pattern-matching switch, text blocks) when the project's Java version permits and they make the design cleaner — not as decoration.
 - Don't generate scaffolding for problems that haven't been started.
 - Don't add abstractions, error handling, or framework hooks beyond what the current problem teaches.
 - Comments only when the *why* is non-obvious. Well-named identifiers are documentation.
-- A `Main` class per problem is fine for hand-tracing; JUnit tests are encouraged for verification (step 5) once base is working.
-
-## Recommended starting order (from the roadmap)
-
-Tic-Tac-Toe → Vending Machine → Splitwise → Logger → Elevator. After these, most major patterns (State, Strategy, Chain of Responsibility, basic concurrency) have been touched at least once.
-
-## What Claude should do when the user picks a problem
-
-1. Acknowledge the choice. Read the problem's entry in `docs/lld-problems.pdf` (or supplement) so you have the canonical spec at hand for the requirements interview.
-2. **Run the requirements interview.** Wait for the user to start asking questions. Answer like an interviewer — concrete, decisive, no design hints. Pin scope: in vs. out, scale, single-process vs. distributed, persistence, concurrency, etc. Push back on vague questions. If the user is missing a major requirement, drop a hint the way an interviewer would ("have you thought about what happens when…?"). Continue until they say they have what they need.
-3. **Stand down while they design and code solo (30–45 min).** Don't preempt. Engage only if explicitly asked.
-4. When the user brings code back, ask for class design / diagram too if they have one. Critique in this order: missed requirements → SOLID violations → pattern alternatives. Be specific enough to refactor against. Loop critique→refactor until the design holds.
-5. After the refactor settles, **prompt the user for `NOTES.md` content** — ask what they want captured (suggested fields: what was hard, which pattern surprised them, what they'd do differently, the most important critique to remember). Write the result to `NOTES.md` inside the problem's package (e.g. `a_foundations/tictactoe/NOTES.md`). Keep it short.
-6. Then prompt the user to pick exactly one variation and **start a fresh requirements interview** for it (back to step 2). Pitch a variation tailored to a tension that surfaced in the refactor; offer the PDF/supplement list as alternatives; the user can also pick their own. Append to `NOTES.md` after each variation with what it taught.
+- A `Main` class per problem is fine for hand-tracing; JUnit tests are encouraged once the base is working.
